@@ -329,11 +329,13 @@ return [
             'text' => 'Gestión de Usuarios',
             'url'  => 'gestionUsuarios',
             'icon' => 'fas fa-users',
+            'can' => 'admin',
         ],
         [
             'text' => 'Gestión de Archivos',
             'url'  => 'gestionArchivos',
             'icon' => 'fas fa-folder-open',
+            'can' => 'admin',
         ],
     ],
 
