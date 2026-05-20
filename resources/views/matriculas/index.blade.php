@@ -1,4 +1,4 @@
-@extends('adminlte::page')
+﻿@extends('adminlte::page')
 
 @section('title', 'Formulario de Matrícula')
 
@@ -10,394 +10,559 @@
 <div class="row justify-content-center">
     <div class="col-lg-9">
 
-        {{-- Progreso general --}}
-        <div class="card card-outline card-primary mb-3">
-            <div class="card-body py-3">
-                <div class="d-flex justify-content-between align-items-center mb-2">
-                    <span class="font-weight-bold text-primary" id="lote-label">
-                        <i class="fas fa-layer-group mr-1"></i> Sección 1 de 3
-                    </span>
-                    <span class="badge badge-primary px-3 py-2" id="preguntas-label">
-                        Preguntas 1 – 10
-                    </span>
-                </div>
-                <div class="progress" style="height: 10px; border-radius: 5px;">
-                    <div id="progress-bar"
-                         class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
-                         role="progressbar"
-                         style="width: 33.33%;">
+        @if(session('success'))
+            <div class="alert alert-success">{{ session('success') }}</div>
+        @endif
+
+        <form id="matricula-form" method="POST" action="{{ route('matriculas.store') }}">
+            @csrf
+
+            <div class="card card-outline card-primary mb-3">
+                <div class="card-body py-3">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
+                        <span class="font-weight-bold text-primary" id="lote-label">
+                            <i class="fas fa-layer-group mr-1"></i> Sección 1 de 7
+                        </span>
+                        <span class="badge badge-primary px-3 py-2" id="preguntas-label">
+                            Preguntas 1 – 10
+                        </span>
                     </div>
-                </div>
-                <small class="text-muted mt-1 d-block text-right" id="pct-label">33% completado</small>
-            </div>
-        </div>
-
-        {{-- Lote 1 --}}
-        <div id="lote-1" class="lote">
-            <div class="card card-outline card-primary">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-user mr-2 text-primary"></i>Datos Personales
-                    </h3>
-                </div>
-                <div class="card-body">
-
-                    <div class="form-group">
-                        <label><span class="badge badge-primary mr-1">1</span> ¿Cuál es tu nombre completo? <span class="text-danger">*</span></label>
-                        <input type="text" id="p1" class="form-control" placeholder="Ej: Juan Pérez García" oninput="guardar(1, this.value)">
-                        <small class="text-danger d-none" id="err1">Este campo es obligatorio.</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label><span class="badge badge-primary mr-1">2</span> ¿Cuál es tu número de identificación? <span class="text-danger">*</span></label>
-                        <input type="text" id="p2" class="form-control" placeholder="Ej: 1234567890" oninput="guardar(2, this.value)">
-                        <small class="text-danger d-none" id="err2">Este campo es obligatorio.</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label><span class="badge badge-primary mr-1">3</span> ¿Cuál es tu género? <span class="text-danger">*</span></label>
-                        <select id="p3" class="form-control" onchange="guardar(3, this.value)">
-                            <option value="">-- Selecciona --</option>
-                            <option>Masculino</option>
-                            <option>Femenino</option>
-                            <option>Otro</option>
-                            <option>Prefiero no decir</option>
-                        </select>
-                        <small class="text-danger d-none" id="err3">Este campo es obligatorio.</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label><span class="badge badge-primary mr-1">4</span> ¿Cuál es tu fecha de nacimiento? <span class="text-danger">*</span></label>
-                        <input type="date" id="p4" class="form-control" onchange="guardar(4, this.value)">
-                        <small class="text-danger d-none" id="err4">Este campo es obligatorio.</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label><span class="badge badge-primary mr-1">5</span> ¿Cuál es tu correo electrónico? <span class="text-danger">*</span></label>
-                        <input type="email" id="p5" class="form-control" placeholder="correo@ejemplo.com" oninput="guardar(5, this.value)">
-                        <small class="text-danger d-none" id="err5">Este campo es obligatorio.</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label><span class="badge badge-primary mr-1">6</span> ¿Cuál es tu número de teléfono? <span class="text-danger">*</span></label>
-                        <input type="tel" id="p6" class="form-control" placeholder="Ej: 3001234567" oninput="guardar(6, this.value)">
-                        <small class="text-danger d-none" id="err6">Este campo es obligatorio.</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label><span class="badge badge-primary mr-1">7</span> ¿Cuál es tu dirección de residencia? <span class="text-danger">*</span></label>
-                        <input type="text" id="p7" class="form-control" placeholder="Ej: Calle 123 # 45-67" oninput="guardar(7, this.value)">
-                        <small class="text-danger d-none" id="err7">Este campo es obligatorio.</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label><span class="badge badge-primary mr-1">8</span> ¿En qué ciudad vives? <span class="text-danger">*</span></label>
-                        <select id="p8" class="form-control" onchange="guardar(8, this.value)">
-                            <option value="">-- Selecciona --</option>
-                            <option>Bogotá</option>
-                            <option>Medellín</option>
-                            <option>Cali</option>
-                            <option>Barranquilla</option>
-                            <option>Otra</option>
-                        </select>
-                        <small class="text-danger d-none" id="err8">Este campo es obligatorio.</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label><span class="badge badge-primary mr-1">9</span> ¿Tienes alguna discapacidad? <span class="text-danger">*</span></label>
-                        <div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="p9_si" name="p9" class="custom-control-input" value="Sí" onchange="guardar(9, this.value)">
-                                <label class="custom-control-label" for="p9_si">Sí</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="p9_no" name="p9" class="custom-control-input" value="No" onchange="guardar(9, this.value)">
-                                <label class="custom-control-label" for="p9_no">No</label>
-                            </div>
+                    <div class="progress" style="height: 10px; border-radius: 5px;">
+                        <div id="progress-bar"
+                             class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                             role="progressbar"
+                             style="width: 14.2857%;">
                         </div>
-                        <small class="text-danger d-none" id="err9">Selecciona una opción.</small>
                     </div>
-
-                    <div class="form-group">
-                        <label><span class="badge badge-secondary mr-1">10</span> Si respondiste sí, descríbela brevemente. <span class="text-muted">(Opcional)</span></label>
-                        <textarea id="p10" class="form-control" rows="3" placeholder="Describe tu condición..." oninput="guardar(10, this.value)"></textarea>
-                    </div>
-
+                    <small class="text-muted mt-1 d-block text-right" id="pct-label">14% completado</small>
                 </div>
             </div>
-        </div>
 
-        {{-- Lote 2 --}}
-        <div id="lote-2" class="lote d-none">
-            <div class="card card-outline card-success">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-graduation-cap mr-2 text-success"></i>Información Académica
-                    </h3>
-                </div>
-                <div class="card-body">
-
-                    <div class="form-group">
-                        <label><span class="badge badge-success mr-1">11</span> ¿Cuál es tu nivel educativo actual? <span class="text-danger">*</span></label>
-                        <select id="p11" class="form-control" onchange="guardar(11, this.value)">
-                            <option value="">-- Selecciona --</option>
-                            <option>Bachillerato</option>
-                            <option>Técnico</option>
-                            <option>Tecnólogo</option>
-                            <option>Universitario</option>
-                            <option>Posgrado</option>
-                        </select>
-                        <small class="text-danger d-none" id="err11">Este campo es obligatorio.</small>
+            <div id="lote-1" class="lote">
+                <div class="card card-outline card-primary">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-user mr-2 text-primary"></i>Datos del alumno</h3>
                     </div>
-
-                    <div class="form-group">
-                        <label><span class="badge badge-success mr-1">12</span> ¿En qué institución estudiaste anteriormente? <span class="text-danger">*</span></label>
-                        <input type="text" id="p12" class="form-control" placeholder="Nombre de la institución" oninput="guardar(12, this.value)">
-                        <small class="text-danger d-none" id="err12">Este campo es obligatorio.</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label><span class="badge badge-success mr-1">13</span> ¿Estás trabajando actualmente? <span class="text-danger">*</span></label>
-                        <div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="p13_si" name="p13" class="custom-control-input" value="Sí" onchange="guardar(13, this.value)">
-                                <label class="custom-control-label" for="p13_si">Sí</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="p13_no" name="p13" class="custom-control-input" value="No" onchange="guardar(13, this.value)">
-                                <label class="custom-control-label" for="p13_no">No</label>
-                            </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label><span class="badge badge-primary mr-1">1</span> Jornada escolar <span class="text-danger">*</span></label>
+                            <select id="p1" name="jornada" class="form-control" onchange="guardar(1, this.value)">
+                                <option value="">-- Selecciona --</option>
+                                <option>Mañana</option>
+                                <option>Tarde</option>
+                                <option>Noche</option>
+                                <option>Mixta</option>
+                            </select>
+                            <small class="text-danger d-none" id="err1">Este campo es obligatorio.</small>
                         </div>
-                        <small class="text-danger d-none" id="err13">Selecciona una opción.</small>
-                    </div>
 
-                    <div class="form-group">
-                        <label><span class="badge badge-success mr-1">14</span> ¿Cuál es tu estrato socioeconómico? <span class="text-danger">*</span></label>
-                        <select id="p14" class="form-control" onchange="guardar(14, this.value)">
-                            <option value="">-- Selecciona --</option>
-                            <option>1</option><option>2</option><option>3</option>
-                            <option>4</option><option>5</option><option>6</option>
-                        </select>
-                        <small class="text-danger d-none" id="err14">Este campo es obligatorio.</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label><span class="badge badge-success mr-1">15</span> ¿Qué materias te interesan? <span class="text-danger">*</span></label>
-                        <div>
-                            @foreach(['Matemáticas','Ciencias','Humanidades','Arte','Tecnología'] as $materia)
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="p15_{{ $loop->index }}" name="p15" value="{{ $materia }}" onchange="guardarCheck(15)">
-                                <label class="custom-control-label" for="p15_{{ $loop->index }}">{{ $materia }}</label>
-                            </div>
-                            @endforeach
+                        <div class="form-group">
+                            <label><span class="badge badge-primary mr-1">2</span> Sede escolar <span class="text-danger">*</span></label>
+                            <input type="text" id="p2" name="sede" class="form-control" placeholder="Ej: A1" oninput="guardar(2, this.value)">
+                            <small class="text-danger d-none" id="err2">Este campo es obligatorio.</small>
                         </div>
-                        <small class="text-danger d-none" id="err15">Selecciona al menos una opción.</small>
-                    </div>
 
-                    <div class="form-group">
-                        <label><span class="badge badge-success mr-1">16</span> ¿Has cursado algún semestre antes? <span class="text-danger">*</span></label>
-                        <div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="p16_si" name="p16" class="custom-control-input" value="Sí" onchange="guardar(16, this.value)">
-                                <label class="custom-control-label" for="p16_si">Sí</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="p16_no" name="p16" class="custom-control-input" value="No" onchange="guardar(16, this.value)">
-                                <label class="custom-control-label" for="p16_no">No</label>
-                            </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-primary mr-1">3</span> Tipo de identificación <span class="text-danger">*</span></label>
+                            <select id="p3" name="tipo_identi" class="form-control" onchange="guardar(3, this.value)">
+                                <option value="">-- Selecciona --</option>
+                                <option>CC</option>
+                                <option>TI</option>
+                                <option>CE</option>
+                                <option>Pasaporte</option>
+                                <option>NIT</option>
+                            </select>
+                            <small class="text-danger d-none" id="err3">Este campo es obligatorio.</small>
                         </div>
-                        <small class="text-danger d-none" id="err16">Selecciona una opción.</small>
-                    </div>
 
-                    <div class="form-group">
-                        <label><span class="badge badge-success mr-1">17</span> ¿Cuántos semestres has cursado? <span class="text-danger">*</span></label>
-                        <input type="number" id="p17" class="form-control" min="0" placeholder="Ej: 3" oninput="guardar(17, this.value)">
-                        <small class="text-danger d-none" id="err17">Este campo es obligatorio.</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label><span class="badge badge-success mr-1">18</span> ¿En qué jornada prefieres estudiar? <span class="text-danger">*</span></label>
-                        <select id="p18" class="form-control" onchange="guardar(18, this.value)">
-                            <option value="">-- Selecciona --</option>
-                            <option>Mañana</option><option>Tarde</option>
-                            <option>Noche</option><option>Virtual</option>
-                        </select>
-                        <small class="text-danger d-none" id="err18">Este campo es obligatorio.</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label><span class="badge badge-success mr-1">19</span> ¿Requieres beca o apoyo económico? <span class="text-danger">*</span></label>
-                        <div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="p19_si" name="p19" class="custom-control-input" value="Sí" onchange="guardar(19, this.value)">
-                                <label class="custom-control-label" for="p19_si">Sí</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="p19_no" name="p19" class="custom-control-input" value="No" onchange="guardar(19, this.value)">
-                                <label class="custom-control-label" for="p19_no">No</label>
-                            </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-primary mr-1">4</span> Número de identificación <span class="text-danger">*</span></label>
+                            <input type="text" id="p4" name="num_identi" class="form-control" placeholder="Ej: 1234567890" oninput="guardar(4, this.value)">
+                            <small class="text-danger d-none" id="err4">Este campo es obligatorio.</small>
                         </div>
-                        <small class="text-danger d-none" id="err19">Selecciona una opción.</small>
-                    </div>
 
-                    <div class="form-group">
-                        <label><span class="badge badge-success mr-1">20</span> ¿Por qué deseas matricularte en este programa? <span class="text-danger">*</span></label>
-                        <textarea id="p20" class="form-control" rows="3" placeholder="Escribe tu motivación..." oninput="guardar(20, this.value)"></textarea>
-                        <small class="text-danger d-none" id="err20">Este campo es obligatorio.</small>
-                    </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-primary mr-1">5</span> Fecha de nacimiento <span class="text-danger">*</span></label>
+                            <input type="date" id="p5" name="fecha_nacimiento" class="form-control" onchange="guardar(5, this.value)">
+                            <small class="text-danger d-none" id="err5">Este campo es obligatorio.</small>
+                        </div>
 
+                        <div class="form-group">
+                            <label><span class="badge badge-primary mr-1">6</span> Grado al que va a matricularse <span class="text-danger">*</span></label>
+                            <input type="text" id="p6" name="grado" class="form-control" placeholder="Ej: Noveno" oninput="guardar(6, this.value)">
+                            <small class="text-danger d-none" id="err6">Este campo es obligatorio.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-primary mr-1">7</span> Grupo al que va a matricularse <span class="text-danger">*</span></label>
+                            <input type="text" id="p7" name="grupo" class="form-control" placeholder="Ej: 10-A" oninput="guardar(7, this.value)">
+                            <small class="text-danger d-none" id="err7">Este campo es obligatorio.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-primary mr-1">8</span> Ciudad de residencia <span class="text-danger">*</span></label>
+                            <input type="text" id="p8" name="ciudad" class="form-control" placeholder="Ej: Bogotá" oninput="guardar(8, this.value)">
+                            <small class="text-danger d-none" id="err8">Este campo es obligatorio.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-primary mr-1">9</span> Departamento de residencia <span class="text-danger">*</span></label>
+                            <input type="text" id="p9" name="departamento" class="form-control" placeholder="Ej: Cundinamarca" oninput="guardar(9, this.value)">
+                            <small class="text-danger d-none" id="err9">Este campo es obligatorio.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-primary mr-1">10</span> Primer apellido del alumno <span class="text-danger">*</span></label>
+                            <input type="text" id="p10" name="primer_apellido" class="form-control" placeholder="Ej: Pérez" oninput="guardar(10, this.value)">
+                            <small class="text-danger d-none" id="err10">Este campo es obligatorio.</small>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        {{-- Lote 3 --}}
-        <div id="lote-3" class="lote d-none">
-            <div class="card card-outline card-warning">
-                <div class="card-header">
-                    <h3 class="card-title">
-                        <i class="fas fa-file-signature mr-2 text-warning"></i>Información Complementaria
-                    </h3>
-                </div>
-                <div class="card-body">
-
-                    <div class="form-group">
-                        <label><span class="badge badge-warning mr-1">21</span> Nombre de tu acudiente o contacto de emergencia <span class="text-danger">*</span></label>
-                        <input type="text" id="p21" class="form-control" placeholder="Nombre completo" oninput="guardar(21, this.value)">
-                        <small class="text-danger d-none" id="err21">Este campo es obligatorio.</small>
+            <div id="lote-2" class="lote d-none">
+                <div class="card card-outline card-success">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-user-graduate mr-2 text-success"></i>Datos personales y de salud</h3>
                     </div>
-
-                    <div class="form-group">
-                        <label><span class="badge badge-warning mr-1">22</span> Teléfono del acudiente <span class="text-danger">*</span></label>
-                        <input type="tel" id="p22" class="form-control" placeholder="Ej: 3009876543" oninput="guardar(22, this.value)">
-                        <small class="text-danger d-none" id="err22">Este campo es obligatorio.</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label><span class="badge badge-warning mr-1">23</span> ¿Cuál es tu relación con el acudiente? <span class="text-danger">*</span></label>
-                        <select id="p23" class="form-control" onchange="guardar(23, this.value)">
-                            <option value="">-- Selecciona --</option>
-                            <option>Padre</option><option>Madre</option>
-                            <option>Hermano/a</option><option>Cónyuge</option><option>Otro</option>
-                        </select>
-                        <small class="text-danger d-none" id="err23">Este campo es obligatorio.</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label><span class="badge badge-warning mr-1">24</span> ¿Tienes hijos a cargo? <span class="text-danger">*</span></label>
-                        <div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="p24_si" name="p24" class="custom-control-input" value="Sí" onchange="guardar(24, this.value)">
-                                <label class="custom-control-label" for="p24_si">Sí</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="p24_no" name="p24" class="custom-control-input" value="No" onchange="guardar(24, this.value)">
-                                <label class="custom-control-label" for="p24_no">No</label>
-                            </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label><span class="badge badge-success mr-1">11</span> Segundo apellido del alumno <span class="text-danger">*</span></label>
+                            <input type="text" id="p11" name="segundo_apellido" class="form-control" placeholder="Ej: García" oninput="guardar(11, this.value)">
+                            <small class="text-danger d-none" id="err11">Este campo es obligatorio.</small>
                         </div>
-                        <small class="text-danger d-none" id="err24">Selecciona una opción.</small>
-                    </div>
 
-                    <div class="form-group">
-                        <label><span class="badge badge-warning mr-1">25</span> ¿Cómo te enteraste de este programa? <span class="text-danger">*</span></label>
-                        <select id="p25" class="form-control" onchange="guardar(25, this.value)">
-                            <option value="">-- Selecciona --</option>
-                            <option>Redes sociales</option><option>Referido</option>
-                            <option>Página web</option><option>Radio/TV</option><option>Otro</option>
-                        </select>
-                        <small class="text-danger d-none" id="err25">Este campo es obligatorio.</small>
-                    </div>
-
-                    <div class="form-group">
-                        <label><span class="badge badge-warning mr-1">26</span> ¿Qué equipos tienes disponibles para estudiar? <span class="text-danger">*</span></label>
-                        <div>
-                            @foreach(['Computador','Tablet','Celular','Ninguno'] as $equipo)
-                            <div class="custom-control custom-checkbox">
-                                <input type="checkbox" class="custom-control-input" id="p26_{{ $loop->index }}" name="p26" value="{{ $equipo }}" onchange="guardarCheck(26)">
-                                <label class="custom-control-label" for="p26_{{ $loop->index }}">{{ $equipo }}</label>
-                            </div>
-                            @endforeach
+                        <div class="form-group">
+                            <label><span class="badge badge-success mr-1">12</span> Primer nombre del alumno <span class="text-danger">*</span></label>
+                            <input type="text" id="p12" name="primer_nombre" class="form-control" placeholder="Ej: Juan" oninput="guardar(12, this.value)">
+                            <small class="text-danger d-none" id="err12">Este campo es obligatorio.</small>
                         </div>
-                        <small class="text-danger d-none" id="err26">Selecciona al menos una opción.</small>
-                    </div>
 
-                    <div class="form-group">
-                        <label><span class="badge badge-warning mr-1">27</span> ¿Tienes acceso a internet en casa? <span class="text-danger">*</span></label>
-                        <div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="p27_si" name="p27" class="custom-control-input" value="Sí" onchange="guardar(27, this.value)">
-                                <label class="custom-control-label" for="p27_si">Sí</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="p27_no" name="p27" class="custom-control-input" value="No" onchange="guardar(27, this.value)">
-                                <label class="custom-control-label" for="p27_no">No</label>
-                            </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-success mr-1">13</span> Segundo nombre del alumno <span class="text-danger">*</span></label>
+                            <input type="text" id="p13" name="segundo_nombre" class="form-control" placeholder="Ej: David" oninput="guardar(13, this.value)">
+                            <small class="text-danger d-none" id="err13">Este campo es obligatorio.</small>
                         </div>
-                        <small class="text-danger d-none" id="err27">Selecciona una opción.</small>
-                    </div>
 
-                    <div class="form-group">
-                        <label><span class="badge badge-secondary mr-1">28</span> Observaciones adicionales <span class="text-muted">(Opcional)</span></label>
-                        <textarea id="p28" class="form-control" rows="3" placeholder="Cualquier información adicional..." oninput="guardar(28, this.value)"></textarea>
-                    </div>
-
-                    <div class="form-group">
-                        <label><span class="badge badge-warning mr-1">29</span> ¿Aceptas el reglamento estudiantil? <span class="text-danger">*</span></label>
-                        <div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="p29_si" name="p29" class="custom-control-input" value="Sí" onchange="guardar(29, this.value)">
-                                <label class="custom-control-label" for="p29_si">Sí, acepto</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="p29_no" name="p29" class="custom-control-input" value="No" onchange="guardar(29, this.value)">
-                                <label class="custom-control-label" for="p29_no">No</label>
-                            </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-success mr-1">14</span> Género del alumno <span class="text-danger">*</span></label>
+                            <select id="p14" name="genero" class="form-control" onchange="guardar(14, this.value)">
+                                <option value="">-- Selecciona --</option>
+                                <option>Masculino</option>
+                                <option>Femenino</option>
+                                <option>Otro</option>
+                            </select>
+                            <small class="text-danger d-none" id="err14">Este campo es obligatorio.</small>
                         </div>
-                        <small class="text-danger d-none" id="err29">Debes aceptar el reglamento.</small>
-                    </div>
 
-                    <div class="form-group">
-                        <label><span class="badge badge-warning mr-1">30</span> ¿Autorizas el tratamiento de tus datos personales? <span class="text-danger">*</span></label>
-                        <div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="p30_si" name="p30" class="custom-control-input" value="Sí" onchange="guardar(30, this.value)">
-                                <label class="custom-control-label" for="p30_si">Sí, autorizo</label>
-                            </div>
-                            <div class="custom-control custom-radio custom-control-inline">
-                                <input type="radio" id="p30_no" name="p30" class="custom-control-input" value="No" onchange="guardar(30, this.value)">
-                                <label class="custom-control-label" for="p30_no">No</label>
-                            </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-success mr-1">15</span> Edad del alumno <span class="text-danger">*</span></label>
+                            <input type="number" id="p15" name="edad" class="form-control" min="1" max="99" placeholder="Ej: 15" oninput="guardar(15, this.value)">
+                            <small class="text-danger d-none" id="err15">Este campo es obligatorio.</small>
                         </div>
-                        <small class="text-danger d-none" id="err30">Este campo es obligatorio.</small>
-                    </div>
 
+                        <div class="form-group">
+                            <label><span class="badge badge-success mr-1">16</span> Grupo sanguíneo <span class="text-danger">*</span></label>
+                            <select id="p16" name="grupo_sanguineo" class="form-control" onchange="guardar(16, this.value)">
+                                <option value="">-- Selecciona --</option>
+                                <option>A</option>
+                                <option>B</option>
+                                <option>AB</option>
+                                <option>O</option>
+                            </select>
+                            <small class="text-danger d-none" id="err16">Este campo es obligatorio.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-success mr-1">17</span> RH <span class="text-danger">*</span></label>
+                            <select id="p17" name="rh" class="form-control" onchange="guardar(17, this.value)">
+                                <option value="">-- Selecciona --</option>
+                                <option>Positivo</option>
+                                <option>Negativo</option>
+                            </select>
+                            <small class="text-danger d-none" id="err17">Este campo es obligatorio.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-success mr-1">18</span> Puntaje SISBÉN <span class="text-danger">*</span></label>
+                            <input type="number" step="0.01" id="p18" name="puntaje_sisben" class="form-control" placeholder="Ej: 45.20" oninput="guardar(18, this.value)">
+                            <small class="text-danger d-none" id="err18">Este campo es obligatorio.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-success mr-1">19</span> Nivel SISBÉN <span class="text-danger">*</span></label>
+                            <input type="text" id="p19" name="nivel_sisben" class="form-control" placeholder="Ej: Nivel 1" oninput="guardar(19, this.value)">
+                            <small class="text-danger d-none" id="err19">Este campo es obligatorio.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-success mr-1">20</span> EPS del alumno <span class="text-danger">*</span></label>
+                            <input type="text" id="p20" name="eps" class="form-control" placeholder="Ej: Sura" oninput="guardar(20, this.value)">
+                            <small class="text-danger d-none" id="err20">Este campo es obligatorio.</small>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        {{-- Pantalla de éxito --}}
-        <div id="resumen" class="d-none">
-            <div class="card card-outline card-success">
-                <div class="card-body text-center py-5">
-                    <i class="fas fa-check-circle fa-5x text-success mb-3"></i>
-                    <h3 class="font-weight-bold">¡Formulario completado!</h3>
-                    <p class="text-muted">Todas tus respuestas han sido registradas correctamente.</p>
-                    <button class="btn btn-success btn-lg px-5 mt-2" onclick="enviarFormulario()">
-                        <i class="fas fa-paper-plane mr-2"></i>Enviar Matrícula
-                    </button>
+            <div id="lote-3" class="lote d-none">
+                <div class="card card-outline card-info">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-hospital-symbol mr-2 text-info"></i>Datos de contacto y salud</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">21</span> Correo electrónico del alumno <span class="text-danger">*</span></label>
+                            <input type="email" id="p21" name="email" class="form-control" placeholder="correo@ejemplo.com" oninput="guardar(21, this.value)">
+                            <small class="text-danger d-none" id="err21">Este campo es obligatorio.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">22</span> ARS / IPS (si aplica)</label>
+                            <input type="text" id="p22" name="ars_ips" class="form-control" placeholder="Ej: Salud Total" oninput="guardar(22, this.value)">
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">23</span> Localidad de residencia <span class="text-danger">*</span></label>
+                            <input type="text" id="p23" name="localidad" class="form-control" placeholder="Ej: Suba" oninput="guardar(23, this.value)">
+                            <small class="text-danger d-none" id="err23">Este campo es obligatorio.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">24</span> Estrato social <span class="text-danger">*</span></label>
+                            <select id="p24" name="estrato" class="form-control" onchange="guardar(24, this.value)">
+                                <option value="">-- Selecciona --</option>
+                                <option>1</option><option>2</option><option>3</option>
+                                <option>4</option><option>5</option><option>6</option>
+                            </select>
+                            <small class="text-danger d-none" id="err24">Este campo es obligatorio.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">25</span> Barrio de residencia <span class="text-danger">*</span></label>
+                            <input type="text" id="p25" name="barrio" class="form-control" placeholder="Ej: La Floresta" oninput="guardar(25, this.value)">
+                            <small class="text-danger d-none" id="err25">Este campo es obligatorio.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">26</span> Dirección de residencia <span class="text-danger">*</span></label>
+                            <input type="text" id="p26" name="direccion" class="form-control" placeholder="Ej: Calle 12 # 34-56" oninput="guardar(26, this.value)">
+                            <small class="text-danger d-none" id="err26">Este campo es obligatorio.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">27</span> Teléfono fijo de contacto <span class="text-danger">*</span></label>
+                            <input type="tel" id="p27" name="telefono" class="form-control" placeholder="Ej: 1234567" oninput="guardar(27, this.value)">
+                            <small class="text-danger d-none" id="err27">Este campo es obligatorio.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">28</span> Teléfono móvil del alumno <span class="text-danger">*</span></label>
+                            <input type="tel" id="p28" name="celular" class="form-control" placeholder="Ej: 3001234567" oninput="guardar(28, this.value)">
+                            <small class="text-danger d-none" id="err28">Este campo es obligatorio.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">29</span> Víctima del conflicto armado <span class="text-danger">*</span></label>
+                            <div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="p29_si" name="VDCA" class="custom-control-input" value="Sí" onchange="guardar(29, this.value)">
+                                    <label class="custom-control-label" for="p29_si">Sí</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="p29_no" name="VDCA" class="custom-control-input" value="No" onchange="guardar(29, this.value)">
+                                    <label class="custom-control-label" for="p29_no">No</label>
+                                </div>
+                            </div>
+                            <small class="text-danger d-none" id="err29">Selecciona una opción.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">30</span> En situación de desplazamiento <span class="text-danger">*</span></label>
+                            <div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="p30_si" name="ESDD" class="custom-control-input" value="Sí" onchange="guardar(30, this.value)">
+                                    <label class="custom-control-label" for="p30_si">Sí</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="p30_no" name="ESDD" class="custom-control-input" value="No" onchange="guardar(30, this.value)">
+                                    <label class="custom-control-label" for="p30_no">No</label>
+                                </div>
+                            </div>
+                            <small class="text-danger d-none" id="err30">Selecciona una opción.</small>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </div>
 
-        {{-- Botones de navegación --}}
-        <div id="nav-btns" class="d-flex justify-content-between mb-4">
-            <button class="btn btn-secondary px-4 d-none" id="btn-anterior" onclick="cambiarLote(-1)">
-                <i class="fas fa-arrow-left mr-2"></i>Anterior
-            </button>
-            <button class="btn btn-primary px-4 ml-auto" id="btn-siguiente" onclick="cambiarLote(1)">
-                Siguiente <i class="fas fa-arrow-right ml-2"></i>
-            </button>
-        </div>
+            <div id="lote-4" class="lote d-none">
+                <div class="card card-outline card-secondary">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-history mr-2 text-secondary"></i>Información de desplazamiento y salud</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label><span class="badge badge-secondary mr-1">31</span> Hijos de desvinculados de grupos armados <span class="text-danger">*</span></label>
+                            <div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="p31_si" name="HDDDGA" class="custom-control-input" value="Sí" onchange="guardar(31, this.value)">
+                                    <label class="custom-control-label" for="p31_si">Sí</label>
+                                </div>
+                                <div class="custom-control custom-radio custom-control-inline">
+                                    <input type="radio" id="p31_no" name="HDDDGA" class="custom-control-input" value="No" onchange="guardar(31, this.value)">
+                                    <label class="custom-control-label" for="p31_no">No</label>
+                                </div>
+                            </div>
+                            <small class="text-danger d-none" id="err31">Selecciona una opción.</small>
+                        </div>
 
+                        <div class="form-group">
+                            <label><span class="badge badge-secondary mr-1">32</span> Municipio expulsor <span class="text-danger">*</span></label>
+                            <input type="text" id="p32" name="municipio_expulsor" class="form-control" placeholder="Ej: Villavicencio" oninput="guardar(32, this.value)">
+                            <small class="text-danger d-none" id="err32">Este campo es obligatorio.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-secondary mr-1">33</span> Departamento expulsor <span class="text-danger">*</span></label>
+                            <input type="text" id="p33" name="departamento_expulsor" class="form-control" placeholder="Ej: Meta" oninput="guardar(33, this.value)">
+                            <small class="text-danger d-none" id="err33">Este campo es obligatorio.</small>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-secondary mr-1">34</span> Limitaciones o capacidades excepcionales <span class="text-muted">(Opcional)</span></label>
+                            <textarea id="p34" name="limitaciones" class="form-control" rows="3" placeholder="Describe las limitaciones" oninput="guardar(34, this.value)"></textarea>
+                        </div>
+
+                        <hr>
+                        <h5 class="mb-3">Historia académica 1</h5>
+                        <div class="form-group">
+                            <label><span class="badge badge-secondary mr-1">35</span> Año cursado</label>
+                            <input type="text" id="p35" name="ha_año" class="form-control" placeholder="Ej: 2023" oninput="guardar(35, this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-secondary mr-1">36</span> Grado cursado</label>
+                            <input type="text" id="p36" name="ha_grado" class="form-control" placeholder="Ej: Noveno" oninput="guardar(36, this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-secondary mr-1">37</span> Institución</label>
+                            <input type="text" id="p37" name="ha_institucion" class="form-control" placeholder="Nombre del colegio" oninput="guardar(37, this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-secondary mr-1">38</span> Localidad</label>
+                            <input type="text" id="p38" name="ha_localidad" class="form-control" placeholder="Ej: Engativá" oninput="guardar(38, this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-secondary mr-1">39</span> Colegio público o privado</label>
+                            <select id="p39" name="ha_categoria" class="form-control" onchange="guardar(39, this.value)">
+                                <option value="">-- Selecciona --</option>
+                                <option>Público</option>
+                                <option>Privado</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label><span class="badge badge-secondary mr-1">40</span> Año cursado 2</label>
+                            <input type="text" id="p40" name="ha_año1" class="form-control" placeholder="Ej: 2022" oninput="guardar(40, this.value)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="lote-5" class="lote d-none">
+                <div class="card card-outline card-dark">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-school mr-2 text-dark"></i>Historia académica adicional</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label><span class="badge badge-dark mr-1">41</span> Grado cursado 2</label>
+                            <input type="text" id="p41" name="ha_grado1" class="form-control" placeholder="Ej: Octavo" oninput="guardar(41, this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-dark mr-1">42</span> Institución 2</label>
+                            <input type="text" id="p42" name="ha_institucion1" class="form-control" placeholder="Nombre del colegio" oninput="guardar(42, this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-dark mr-1">43</span> Localidad 2</label>
+                            <input type="text" id="p43" name="ha_localidad1" class="form-control" placeholder="Ej: Kennedy" oninput="guardar(43, this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-dark mr-1">44</span> Colegio público o privado 2</label>
+                            <select id="p44" name="ha_categoria1" class="form-control" onchange="guardar(44, this.value)">
+                                <option value="">-- Selecciona --</option>
+                                <option>Público</option>
+                                <option>Privado</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-dark mr-1">45</span> Año cursado 3</label>
+                            <input type="text" id="p45" name="ha_año2" class="form-control" placeholder="Ej: 2021" oninput="guardar(45, this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-dark mr-1">46</span> Grado cursado 3</label>
+                            <input type="text" id="p46" name="ha_grado2" class="form-control" placeholder="Ej: Séptimo" oninput="guardar(46, this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-dark mr-1">47</span> Institución 3</label>
+                            <input type="text" id="p47" name="ha_institucion2" class="form-control" placeholder="Nombre del colegio" oninput="guardar(47, this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-dark mr-1">48</span> Localidad 3</label>
+                            <input type="text" id="p48" name="ha_localidad2" class="form-control" placeholder="Ej: Suba" oninput="guardar(48, this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-dark mr-1">49</span> Colegio público o privado 3</label>
+                            <select id="p49" name="ha_categoria2" class="form-control" onchange="guardar(49, this.value)">
+                                <option value="">-- Selecciona --</option>
+                                <option>Público</option>
+                                <option>Privado</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-dark mr-1">50</span> Año cursado 4</label>
+                            <input type="text" id="p50" name="ha_año3" class="form-control" placeholder="Ej: 2020" oninput="guardar(50, this.value)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="lote-6" class="lote d-none">
+                <div class="card card-outline card-info">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-building mr-2 text-info"></i>Historia académica 4 y responsable</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">51</span> Grado cursado 4</label>
+                            <input type="text" id="p51" name="ha_grado3" class="form-control" placeholder="Ej: Sexto" oninput="guardar(51, this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">52</span> Institución 4</label>
+                            <input type="text" id="p52" name="ha_institucion3" class="form-control" placeholder="Nombre del colegio" oninput="guardar(52, this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">53</span> Localidad 4</label>
+                            <input type="text" id="p53" name="ha_localidad3" class="form-control" placeholder="Ej: Chapinero" oninput="guardar(53, this.value)">
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">54</span> Colegio público o privado 4</label>
+                            <select id="p54" name="ha_categoria3" class="form-control" onchange="guardar(54, this.value)">
+                                <option value="">-- Selecciona --</option>
+                                <option>Público</option>
+                                <option>Privado</option>
+                            </select>
+                        </div>
+                        <hr>
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">55</span> Nombre completo del padre <span class="text-danger">*</span></label>
+                            <input type="text" id="p55" name="nombre_padre" class="form-control" placeholder="Ej: Carlos López" oninput="guardar(55, this.value)">
+                            <small class="text-danger d-none" id="err55">Este campo es obligatorio.</small>
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">56</span> Documento del padre <span class="text-danger">*</span></label>
+                            <input type="text" id="p56" name="cedula_padre" class="form-control" placeholder="Ej: 1234567890" oninput="guardar(56, this.value)">
+                            <small class="text-danger d-none" id="err56">Este campo es obligatorio.</small>
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">57</span> Lugar expedición documento padre <span class="text-danger">*</span></label>
+                            <input type="text" id="p57" name="lugar_expedicionp" class="form-control" placeholder="Ej: Bogotá" oninput="guardar(57, this.value)">
+                            <small class="text-danger d-none" id="err57">Este campo es obligatorio.</small>
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">58</span> Teléfono del padre <span class="text-danger">*</span></label>
+                            <input type="tel" id="p58" name="telefono_padre" class="form-control" placeholder="Ej: 3001234567" oninput="guardar(58, this.value)">
+                            <small class="text-danger d-none" id="err58">Este campo es obligatorio.</small>
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">59</span> Correo electrónico del padre <span class="text-danger">*</span></label>
+                            <input type="email" id="p59" name="correo_padre" class="form-control" placeholder="correo@ejemplo.com" oninput="guardar(59, this.value)">
+                            <small class="text-danger d-none" id="err59">Este campo es obligatorio.</small>
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-info mr-1">60</span> Nombre completo de la madre <span class="text-danger">*</span></label>
+                            <input type="text" id="p60" name="nombre_madre" class="form-control" placeholder="Ej: Ana Martínez" oninput="guardar(60, this.value)">
+                            <small class="text-danger d-none" id="err60">Este campo es obligatorio.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="lote-7" class="lote d-none">
+                <div class="card card-outline card-warning">
+                    <div class="card-header">
+                        <h3 class="card-title"><i class="fas fa-user-tie mr-2 text-warning"></i>Responsable del alumno</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="form-group">
+                            <label><span class="badge badge-warning mr-1">61</span> Documento de la madre <span class="text-danger">*</span></label>
+                            <input type="text" id="p61" name="cedula_madre" class="form-control" placeholder="Ej: 0987654321" oninput="guardar(61, this.value)">
+                            <small class="text-danger d-none" id="err61">Este campo es obligatorio.</small>
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-warning mr-1">62</span> Lugar expedición documento madre <span class="text-danger">*</span></label>
+                            <input type="text" id="p62" name="lugar_expedicionm" class="form-control" placeholder="Ej: Medellín" oninput="guardar(62, this.value)">
+                            <small class="text-danger d-none" id="err62">Este campo es obligatorio.</small>
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-warning mr-1">63</span> Teléfono de la madre <span class="text-danger">*</span></label>
+                            <input type="tel" id="p63" name="telefono_madre" class="form-control" placeholder="Ej: 3009876543" oninput="guardar(63, this.value)">
+                            <small class="text-danger d-none" id="err63">Este campo es obligatorio.</small>
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-warning mr-1">64</span> Correo electrónico de la madre <span class="text-danger">*</span></label>
+                            <input type="email" id="p64" name="correo_madre" class="form-control" placeholder="correo@ejemplo.com" oninput="guardar(64, this.value)">
+                            <small class="text-danger d-none" id="err64">Este campo es obligatorio.</small>
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-warning mr-1">65</span> Nombre completo del acudiente <span class="text-danger">*</span></label>
+                            <input type="text" id="p65" name="nombre_acudiente" class="form-control" placeholder="Ej: Luis Gómez" oninput="guardar(65, this.value)">
+                            <small class="text-danger d-none" id="err65">Este campo es obligatorio.</small>
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-warning mr-1">66</span> Documento del acudiente <span class="text-danger">*</span></label>
+                            <input type="text" id="p66" name="cedula_acudiente" class="form-control" placeholder="Ej: 1122334455" oninput="guardar(66, this.value)">
+                            <small class="text-danger d-none" id="err66">Este campo es obligatorio.</small>
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-warning mr-1">67</span> Lugar expedición documento acudiente <span class="text-danger">*</span></label>
+                            <input type="text" id="p67" name="lugar_expediciona" class="form-control" placeholder="Ej: Cali" oninput="guardar(67, this.value)">
+                            <small class="text-danger d-none" id="err67">Este campo es obligatorio.</small>
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-warning mr-1">68</span> Teléfono del acudiente <span class="text-danger">*</span></label>
+                            <input type="tel" id="p68" name="telefono_acudiente" class="form-control" placeholder="Ej: 3123456789" oninput="guardar(68, this.value)">
+                            <small class="text-danger d-none" id="err68">Este campo es obligatorio.</small>
+                        </div>
+                        <div class="form-group">
+                            <label><span class="badge badge-warning mr-1">69</span> Correo electrónico del acudiente <span class="text-danger">*</span></label>
+                            <input type="email" id="p69" name="correo_acudiente" class="form-control" placeholder="correo@ejemplo.com" oninput="guardar(69, this.value)">
+                            <small class="text-danger d-none" id="err69">Este campo es obligatorio.</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="resumen" class="d-none">
+                <div class="card card-outline card-success">
+                    <div class="card-body text-center py-5">
+                        <i class="fas fa-check-circle fa-5x text-success mb-3"></i>
+                        <h3 class="font-weight-bold">¡Formulario completado!</h3>
+                        <p class="text-muted">Todas tus respuestas han sido registradas correctamente.</p>
+                        <button type="button" class="btn btn-success btn-lg px-5 mt-2" onclick="enviarFormulario()">
+                            <i class="fas fa-paper-plane mr-2"></i>Enviar Matrícula
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div id="nav-btns" class="d-flex justify-content-between mb-4">
+                <button type="button" class="btn btn-secondary px-4 d-none" id="btn-anterior" onclick="cambiarLote(-1)">
+                    <i class="fas fa-arrow-left mr-2"></i>Anterior
+                </button>
+                <button type="button" class="btn btn-primary px-4 ml-auto" id="btn-siguiente" onclick="cambiarLote(1)">
+                    Siguiente <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </form>
     </div>
 </div>
 @stop
@@ -406,8 +571,8 @@
 <script>
 const respuestas = {};
 let loteActual = 1;
-const totalLotes = 3;
-const opcionales = [10, 28];
+const totalLotes = 7;
+const opcionales = [22, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54];
 
 function guardar(id, val) {
     respuestas[id] = val;
@@ -442,7 +607,7 @@ function validarLote(n) {
 
 function actualizarUI() {
     const inicio = (loteActual - 1) * 10 + 1;
-    const fin = Math.min(loteActual * 10, 30);
+    const fin = Math.min(loteActual * 10, 69);
     const pct = Math.round((loteActual / totalLotes) * 100);
     document.getElementById('lote-label').innerHTML = `<i class="fas fa-layer-group mr-1"></i> Sección ${loteActual} de ${totalLotes}`;
     document.getElementById('preguntas-label').textContent = `Preguntas ${inicio} – ${fin}`;
@@ -469,7 +634,7 @@ function cambiarLote(dir) {
         document.getElementById('progress-bar').style.width = '100%';
         document.getElementById('pct-label').textContent = '100% completado';
         document.getElementById('lote-label').innerHTML = '<i class="fas fa-check-circle mr-1 text-success"></i> Completado';
-        document.getElementById('preguntas-label').textContent = '30 / 30';
+        document.getElementById('preguntas-label').textContent = '69 / 69';
         window.scrollTo({ top: 0, behavior: 'smooth' });
         return;
     }
@@ -479,9 +644,7 @@ function cambiarLote(dir) {
 }
 
 function enviarFormulario() {
-    // Aquí puedes hacer un fetch/axios POST a tu ruta de Laravel
-    toastr.success('¡Matrícula enviada correctamente!', 'Éxito');
-    console.log('Respuestas:', respuestas);
+    document.getElementById('matricula-form').submit();
 }
 
 actualizarUI();
