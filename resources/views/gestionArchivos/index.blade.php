@@ -53,12 +53,15 @@
                                 <label for="tipo_archivo"><i class="fas fa-tag mr-1"></i> Tipo de Documento <span class="text-danger">*</span></label>
                                 <select class="form-control @error('tipo_archivo') is-invalid @enderror" id="tipo_archivo" name="tipo_archivo" required>
                                     <option value="">-- Seleccione un tipo --</option>
-                                    <option value="cedula" {{ old('tipo_archivo') == 'cedula' ? 'selected' : '' }}>Cédula de Ciudadanía</option>
-                                    <option value="acta_grado" {{ old('tipo_archivo') == 'acta_grado' ? 'selected' : '' }}>Acta de Grado</option>
-                                    <option value="diploma" {{ old('tipo_archivo') == 'diploma' ? 'selected' : '' }}>Diploma</option>
-                                    <option value="contrato" {{ old('tipo_archivo') == 'contrato' ? 'selected' : '' }}>Contrato</option>
-                                    <option value="paz_salvo" {{ old('tipo_archivo') == 'paz_salvo' ? 'selected' : '' }}>Paz y Salvo</option>
-                                    <option value="historia_clinica" {{ old('tipo_archivo') == 'historia_clinica' ? 'selected' : '' }}>Historia Clínica</option>
+                                    <option value="tarjetaIdentidad" {{ old('tipo_archivo') == 'tarjetaIdentidad' ? 'selected' : '' }}>Tarjeta de Identidad</option>
+                                    <option value="RegistroCivil" {{ old('tipo_archivo') == 'RegistroCivil' ? 'selected' : '' }}>Registro Civil</option>
+                                    <option value="CedulaAcudiente" {{ old('tipo_archivo') == 'CedulaAcudiente' ? 'selected' : '' }}>Cedula de ciudadania del acudiente</option>
+                                    <option value="afiliacionEpsSisben" {{ old('tipo_archivo') == 'afiliacionEpsSisben' ? 'selected' : '' }}>Afiliación EPS o Sisben</option>
+                                    <option value="carnetVacunacion" {{ old('tipo_archivo') == 'carnetVacunacion' ? 'selected' : '' }}>Carnet de vacunación</option>
+                                    <option value="certificadoUltimosGrados" {{ old('tipo_archivo') == 'certificadoUltimosGrados' ? 'selected' : '' }}>Certificado de último grados</option>
+                                    <option value="reciboPublico" {{ old('tipo_archivo') == 'reciboPublico' ? 'selected' : '' }}>Recibo Público reciente del lugar de residencia</option>
+                                    <option value="formularioMatricula" {{ old('tipo_archivo') == 'formularioMatricula' ? 'selected' : '' }}>Formulario de matrícula diligenciado e impreso</option>
+                                    <option value="fotos" {{ old('tipo_archivo') == 'fotos' ? 'selected' : '' }}>Fotos</option>
                                     <option value="otro" {{ old('tipo_archivo') == 'otro' ? 'selected' : '' }}>Otro</option>
                                 </select>
                                 @error('tipo_archivo')
@@ -66,19 +69,19 @@
                                 @enderror
                             </div>
  
-                            {{-- Número de cédula --}}
+                            {{-- Número Tarjeta de Identidad --}}
                             <div class="form-group">
-                                <label for="cedula"><i class="fas fa-id-card mr-1"></i> Número de Cédula <span class="text-danger">*</span></label>
+                                <label for="tarjetaIdentidad"><i class="fas fa-id-card mr-1"></i> Número Tarjeta de Identidad <span class="text-danger">*</span></label>
                                 <input type="text"
-                                       class="form-control @error('cedula') is-invalid @enderror"
-                                       id="cedula"
-                                       name="cedula"
+                                       class="form-control @error('tarjetaIdentidad') is-invalid @enderror"
+                                       id="tarjetaIdentidad"
+                                       name="tarjetaIdentidad"
                                        placeholder="Ej: 1020304050"
-                                       value="{{ old('cedula') }}"
+                                       value="{{ old('tarjetaIdentidad') }}"
                                        maxlength="15"
                                        pattern="[0-9]+"
                                        required>
-                                @error('cedula')
+                                @error('tarjetaIdentidad')
                                     <div class="invalid-feedback">{{ $message }}</div>
                                 @enderror
                             </div>
@@ -129,7 +132,7 @@
                 <div class="row mb-3">
                     <div class="col-md-5">
                         <div class="input-group">
-                            <input type="text" id="filtroCedula" class="form-control" placeholder="Buscar por número de cédula...">
+                            <input type="text" id="filtrotarjetaIdentidad" class="form-control" placeholder="Buscar por número de tarjeta de identidad...">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-primary" id="btnBuscar">
                                     <i class="fas fa-search"></i> Buscar
@@ -140,12 +143,15 @@
                     <div class="col-md-3">
                         <select class="form-control" id="filtroTipo">
                             <option value="">-- Todos los tipos --</option>
-                            <option value="cedula">Cédula de Ciudadanía</option>
-                            <option value="acta_grado">Acta de Grado</option>
-                            <option value="diploma">Diploma</option>
-                            <option value="contrato">Contrato</option>
-                            <option value="paz_salvo">Paz y Salvo</option>
-                            <option value="historia_clinica">Historia Clínica</option>
+                            <option value="tarjetaIdentidad">Tarjeta de identidad</option>
+                            <option value="RegistroCivil">Registro civil</option>
+                            <option value="CedulaAcudiente">Cedula de ciudadania del acudiente</option>
+                            <option value="afiliacionEpsSisben">Afiliación EPS o Sisben</option>
+                            <option value="carnetVacunacion">Carnet de vacunación</option>
+                            <option value="certificadoUltimosGrados">Certificado de último grado aprobado</option>
+                            <option value="reciboPublico">Recibo Público reciente del lugar de residencia</option>
+                            <option value="formularioMatricula">Formulario de matrícula diligenciado e impreso</option>
+                            <option value="fotos">Fotos</option>
                             <option value="otro">Otro</option>
                         </select>
                     </div>
@@ -163,7 +169,7 @@
                             <tr>
                                 <th>#</th>
                                 <th><i class="fas fa-tag mr-1"></i>Tipo</th>
-                                <th><i class="fas fa-id-card mr-1"></i>Cédula</th>
+                                <th><i class="fas fa-id-card mr-1"></i>Tarjeta de identidad</th>
                                 <th><i class="fas fa-file-pdf mr-1"></i>Archivo</th>
                                 <th><i class="fas fa-calendar mr-1"></i>Fecha</th>
                                 <th>Acciones</th>
@@ -171,14 +177,14 @@
                         </thead>
                         <tbody>
                             @forelse($archivos as $archivo)
-                            <tr data-cedula="{{ $archivo->cedula }}" data-tipo="{{ $archivo->tipo_archivo }}">
+                            <tr data-tarjeta-identidad="{{ $archivo->tarjetaIdentidad }}" data-tipo="{{ $archivo->tipo_archivo }}">
                                 <td>{{ $loop->iteration }}</td>
                                 <td>
                                     <span class="badge badge-info">
                                         {{ ucfirst(str_replace('_', ' ', $archivo->tipo_archivo)) }}
                                     </span>
                                 </td>
-                                <td>{{ $archivo->cedula }}</td>
+                                <td>{{ $archivo->tarjetaIdentidad }}</td>
                                 <td>
                                     <i class="fas fa-file-pdf text-danger mr-1"></i>
                                     {{ $archivo->nombre_original }}
@@ -297,6 +303,7 @@
  
 @section('js')
 <script>
+const baseUrl = "{{ url('gestionArchivos') }}";
 $(document).ready(function () {
  
     // ── Mostrar nombre del archivo seleccionado ──
@@ -333,21 +340,23 @@ $(document).ready(function () {
         const id     = $(this).data('id');
         const nombre = $(this).data('nombre');
         $('#nombreArchivoEliminar').text(nombre);
-        $('#formEliminar').attr('action', '/gestionArchivos/' + id);
+        $('#formEliminar').attr('action', baseUrl + '/' + id);  // ← usa baseUrl
         $('#modalEliminar').modal('show');
     });
  
     // ── Filtro por cédula y tipo ──
     function filtrarTabla() {
-        const cedula = $('#filtroCedula').val().trim().toLowerCase();
-        const tipo   = $('#filtroTipo').val().toLowerCase();
+        const tarjetaIdentidad = $('#filtrotarjetaIdentidad').val().trim().toLowerCase();
+        const tipo = $('#filtroTipo').val().toLowerCase();
         let visibles = 0;
- 
-        $('#tablaArchivos tbody tr[data-cedula]').each(function () {
-            const fCedula = $(this).data('cedula').toString().toLowerCase();
-            const fTipo   = $(this).data('tipo').toString().toLowerCase();
-            const matchC  = cedula === '' || fCedula.includes(cedula);
-            const matchT  = tipo   === '' || fTipo === tipo;
+
+        // jQuery convierte data-tarjeta-identidad → .data('tarjeta-identidad')
+        $('#tablaArchivos tbody tr[data-tarjeta-identidad]').each(function () {
+            const fTarjeta = $(this).data('tarjeta-identidad').toString().toLowerCase();
+            const fTipo    = $(this).data('tipo').toString().toLowerCase();
+            const matchC   = tarjetaIdentidad === '' || fTarjeta.includes(tarjetaIdentidad);
+            const matchT   = tipo === '' || fTipo === tipo;
+
             if (matchC && matchT) {
                 $(this).show();
                 visibles++;
@@ -355,10 +364,9 @@ $(document).ready(function () {
                 $(this).hide();
             }
         });
- 
-        // Mostrar mensaje si no hay resultados
+
         $('#sinFiltro').remove();
-        if (visibles === 0 && $('#tablaArchivos tbody tr[data-cedula]').length > 0) {
+        if (visibles === 0 && $('#tablaArchivos tbody tr[data-tarjeta-identidad]').length > 0) {
             $('#tablaArchivos tbody').append(
                 '<tr id="sinFiltro"><td colspan="6" class="text-center text-muted">' +
                 '<i class="fas fa-search mr-1"></i>No se encontraron archivos con ese filtro.</td></tr>'
@@ -367,18 +375,18 @@ $(document).ready(function () {
     }
  
     $('#btnBuscar').on('click', filtrarTabla);
-    $('#filtroCedula').on('keyup', function (e) { if (e.key === 'Enter') filtrarTabla(); });
+    $('#filtrotarjetaIdentidad').on('keyup', function (e) { if (e.key === 'Enter') filtrarTabla(); });
     $('#filtroTipo').on('change', filtrarTabla);
  
     $('#btnLimpiarFiltro').on('click', function () {
-        $('#filtroCedula').val('');
+        $('#filtrotarjetaIdentidad').val('');
         $('#filtroTipo').val('');
         $('#tablaArchivos tbody tr').show();
         $('#sinFiltro').remove();
     });
  
     // ── Solo números en cédula ──
-    $('#cedula').on('input', function () {
+    $('#tarjetaIdentidad').on('input', function () {
         this.value = this.value.replace(/[^0-9]/g, '');
     });
  

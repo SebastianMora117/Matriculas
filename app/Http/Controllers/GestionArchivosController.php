@@ -20,12 +20,12 @@ class GestionArchivosController extends Controller
     {
         $request->validate([
             'tipo_archivo' => 'required|string',
-            'cedula'       => 'required|digits_between:5,15',
+            'tarjetaIdentidad'       => 'required|digits_between:5,15',
             'archivo'      => 'required|file|mimes:pdf|max:10240', // max 10 MB
         ], [
             'tipo_archivo.required' => 'Seleccione el tipo de documento.',
-            'cedula.required'       => 'El número de cédula es obligatorio.',
-            'cedula.digits_between' => 'La cédula debe tener entre 5 y 15 dígitos.',
+            'tarjetaIdentidad.required'       => 'El número de tarjeta de identidad es obligatorio.',
+            'tarjetaIdentidad.digits_between' => 'La tarjeta de identidad debe tener entre 5 y 15 dígitos.',
             'archivo.required'      => 'Debe seleccionar un archivo PDF.',
             'archivo.mimes'         => 'Solo se permiten archivos PDF.',
             'archivo.max'           => 'El archivo no puede superar 10 MB.',
@@ -37,7 +37,7 @@ class GestionArchivosController extends Controller
  
         Archivo::create([
             'tipo_archivo'    => $request->tipo_archivo,
-            'cedula'          => $request->cedula,
+            'tarjetaIdentidad'          => $request->tarjetaIdentidad,
             'ruta'            => $path,
             'nombre_original' => $nombreOriginal,
         ]);

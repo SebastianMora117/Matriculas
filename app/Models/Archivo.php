@@ -15,7 +15,7 @@ class Archivo extends Model
 
     protected $fillable = [
         'tipo_archivo',
-        'cedula',
+        'tarjetaIdentidad',
         'ruta',
         'nombre_original',
     ];
