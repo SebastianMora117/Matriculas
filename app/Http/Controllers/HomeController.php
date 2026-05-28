@@ -23,6 +23,7 @@ class HomeController extends Controller
      */
     public function index()
     {
-        return view('home');
+        $alumnos = \App\Models\InfAlumno::with('responsable', 'historialAcademico')->get();
+        return view('home', compact('alumnos'));
     }
 }
