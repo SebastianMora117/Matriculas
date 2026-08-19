@@ -34,6 +34,7 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/users/{user}/edit',  [GestionUsuariosController::class, 'edit'])    ->name('users.edit');
     Route::put('/users/{user}',       [GestionUsuariosController::class, 'update'])  ->name('users.update');
     Route::delete('/users/{user}',    [GestionUsuariosController::class, 'destroy']) ->name('users.destroy');
+    Route::patch('/users/{user}/toggle-estado', [GestionUsuariosController::class, 'toggleEstado'])->name('users.toggleEstado');
  
 });
  

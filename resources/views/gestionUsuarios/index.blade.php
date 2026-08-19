@@ -56,6 +56,7 @@
                         <th>Correo electrónico</th>
                         <th>Rol</th>
                         <th>Creado</th>
+                        <th>Estado</th>
                         <th width="120">Acciones</th>
                     </tr>
                 </thead>
@@ -80,11 +81,18 @@
                         </td>
                         <td>{{ $user->created_at ? $user->created_at->format('d/m/Y') : '—' }}</td>
                         <td>
+                            <span class="badge {{ $user->estado ? 'badge-success' : 'badge-danger' }}">
+                                {{ $user->estado ? 'Activo' : 'Inactivo' }}
+                            </span>
+                        </td>
+                        <td>
                             <button class="btn btn-xs btn-info" onclick="abrirEditar({{ $user->id }})">
                                 <i class="fas fa-edit"></i>
                             </button>
-                            <button class="btn btn-xs btn-danger" onclick="confirmarEliminar({{ $user->id }}, '{{ addslashes($user->name) }}')">
-                                <i class="fas fa-trash"></i>
+                            <button class="btn btn-xs {{ $user->estado ? 'btn-warning' : 'btn-success' }}"
+                                    title="{{ $user->estado ? 'Inactivar usuario' : 'Activar usuario' }}"
+                                    onclick="toggleEstado({{ $user->id }}, {{ $user->estado }}, '{{ addslashes($user->name) }}')">
+                                <i class="fas {{ $user->estado ? 'fa-user-slash' : 'fa-user-check' }}"></i>
                             </button>
                         </td>
                     </tr>
@@ -132,11 +140,26 @@
                     </div>
 
                     <div class="form-group" id="grupo-password">
-                        <label for="u-password">Contraseña <span class="text-danger">*</span></label>
-                        <input type="password" class="form-control" id="u-password" placeholder="Mínimo 8 caracteres">
-                        <div class="invalid-feedback">La contraseña debe tener mínimo 8 caracteres.</div>
-                    </div>
+                        <label for="u-password">Contraseña <span class="text-danger" id="label-pass-req">*</span></label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="u-password" placeholder="Mínimo 8 caracteres">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button" id="btn-toggle-pass" tabindex="-1">
+                                    <i class="fas fa-eye" id="icon-pass"></i>
+                                </button>
+                            </div>
+                        </div>
 
+                        {{-- Indicador de requisitos --}}
+                        <div id="password-rules" class="mt-2" style="display:none; font-size:0.82rem;">
+                            <div id="rule-length"  class="text-danger"><i class="fas fa-times-circle mr-1"></i>Mínimo 8 caracteres</div>
+                            <div id="rule-upper"   class="text-danger"><i class="fas fa-times-circle mr-1"></i>Al menos una mayúscula (A–Z)</div>
+                            <div id="rule-lower"   class="text-danger"><i class="fas fa-times-circle mr-1"></i>Al menos una minúscula (a–z)</div>
+                            <div id="rule-number"  class="text-danger"><i class="fas fa-times-circle mr-1"></i>Al menos un número (0–9)</div>
+                            <div id="rule-special" class="text-danger"><i class="fas fa-times-circle mr-1"></i>Al menos un carácter especial (!@#$...)</div>
+                        </div>
+                        <div class="invalid-feedback" id="pass-feedback">La contraseña no cumple los requisitos.</div>
+                    </div>
                     <div class="form-group">
                        <select class="form-control" id="u-roles" required>
                             <option value="">-- Selecciona un rol --</option>
@@ -191,6 +214,44 @@ const BASE = "{{ url('/users') }}";
 let modoActual = 'crear';
 let idEliminar = null;
 
+// ───────────── POLÍTICA DE CONTRASEÑA ─────────────
+const passInput = document.getElementById('u-password');
+const rules = {
+    length:  { el: document.getElementById('rule-length'),  regex: /.{8,}/ },
+    upper:   { el: document.getElementById('rule-upper'),   regex: /[A-Z]/ },
+    lower:   { el: document.getElementById('rule-lower'),   regex: /[a-z]/ },
+    number:  { el: document.getElementById('rule-number'),  regex: /[0-9]/ },
+    special: { el: document.getElementById('rule-special'), regex: /[^A-Za-z0-9]/ },
+};
+
+function validarPassword(value) {
+    let allOk = true;
+    for (const key in rules) {
+        const ok = rules[key].regex.test(value);
+        if (!ok) allOk = false;
+        rules[key].el.className = ok ? 'text-success' : 'text-danger';
+        rules[key].el.querySelector('i').className = ok
+            ? 'fas fa-check-circle mr-1'
+            : 'fas fa-times-circle mr-1';
+    }
+    return allOk;
+}
+
+passInput.addEventListener('focus', () => {
+    document.getElementById('password-rules').style.display = 'block';
+});
+
+passInput.addEventListener('input', () => {
+    validarPassword(passInput.value);
+});
+
+// Mostrar / ocultar contraseña
+document.getElementById('btn-toggle-pass').addEventListener('click', () => {
+    const isPass = passInput.type === 'password';
+    passInput.type = isPass ? 'text' : 'password';
+    document.getElementById('icon-pass').className = isPass ? 'fas fa-eye-slash' : 'fas fa-eye';
+});
+
 // ───────────── ABRIR MODAL CREAR ─────────────
 function abrirCrear() {
     modoActual = 'crear';
@@ -199,6 +260,12 @@ function abrirCrear() {
     document.getElementById('formUsuario').classList.remove('was-validated');
     document.getElementById('user-id').value = '';
     document.getElementById('grupo-password').querySelector('input').required = true;
+    document.getElementById('password-rules').style.display = 'none';
+    // Resetear indicadores al abrir
+    for (const key in rules) {
+        rules[key].el.className = 'text-danger';
+        rules[key].el.querySelector('i').className = 'fas fa-times-circle mr-1';
+    }
 }
 
 // ───────────── ABRIR MODAL EDITAR ─────────────
@@ -209,15 +276,16 @@ function abrirEditar(id) {
     document.getElementById('formUsuario').classList.remove('was-validated');
     document.getElementById('user-id').value = id;
     document.getElementById('grupo-password').querySelector('input').required = false;
+    document.getElementById('password-rules').style.display = 'none';
 
     fetch(`${BASE}/${id}/edit`, {
         headers: { 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' }
     })
     .then(r => r.json())
     .then(data => {
-        document.getElementById('u-name').value    = data.name  || '';
-        document.getElementById('u-email').value   = data.email || '';
-        document.getElementById('u-roles').value   = data.rol_id || '';
+        document.getElementById('u-name').value  = data.name  || '';
+        document.getElementById('u-email').value = data.email || '';
+        document.getElementById('u-roles').value = data.rol_id || '';
         $('#modalUsuario').modal('show');
     })
     .catch(() => toastr.error('No se pudo cargar el usuario.'));
@@ -225,20 +293,33 @@ function abrirEditar(id) {
 
 // ───────────── GUARDAR (crear o editar) ─────────────
 function guardarUsuario() {
-    const form = document.getElementById('formUsuario');
+    const form     = document.getElementById('formUsuario');
+    const password = passInput.value;
+    const id       = document.getElementById('user-id').value;
+
     form.classList.add('was-validated');
     if (!form.checkValidity()) return;
 
-    const id       = document.getElementById('user-id').value;
-    const nombre   = document.getElementById('u-name').value.trim();
-    const email    = document.getElementById('u-email').value.trim();
-    const password = document.getElementById('u-password').value;
-    const roles    = document.getElementById('u-roles').value;
+    // Validar política si hay contraseña
+    if (password) {
+        const ok = validarPassword(password);
+        document.getElementById('password-rules').style.display = 'block';
+        if (!ok) {
+            passInput.classList.add('is-invalid');
+            return;
+        } else {
+            passInput.classList.remove('is-invalid');
+        }
+    } else if (modoActual === 'crear') {
+        // En crear, la contraseña es obligatoria
+        passInput.classList.add('is-invalid');
+        document.getElementById('password-rules').style.display = 'block';
+        return;
+    }
 
-    // Verificar en consola que roles tenga valor
-    console.log('nombre:', nombre);
-    console.log('email:', email);
-    console.log('roles:', roles);
+    const nombre = document.getElementById('u-name').value.trim();
+    const email  = document.getElementById('u-email').value.trim();
+    const roles  = document.getElementById('u-roles').value;
 
     if (!roles) {
         alert('Debes seleccionar un rol.');
@@ -246,16 +327,11 @@ function guardarUsuario() {
     }
 
     const body = {
-        name:     nombre,
-        email:    email,
-        roles:    parseInt(roles),
+        name:  nombre,
+        email: email,
+        roles: parseInt(roles),
     };
-
-    if (password) {
-        body.password = password;
-    }
-
-    console.log('Body final enviado:', JSON.stringify(body));
+    if (password) body.password = password;
 
     const url    = modoActual === 'crear' ? BASE : `${BASE}/${id}`;
     const method = modoActual === 'crear' ? 'POST' : 'PUT';
@@ -271,26 +347,40 @@ function guardarUsuario() {
     })
     .then(r => r.json())
     .then(data => {
-        if (data.error) {
-            alert('Error del servidor: ' + data.error);
-            return;
-        }
-        if (data.errors) {
-            Object.values(data.errors).flat().forEach(msg => alert(msg));
-            return;
-        }
+        if (data.error)  { alert('Error: ' + data.error); return; }
+        if (data.errors) { Object.values(data.errors).flat().forEach(msg => alert(msg)); return; }
         $('#modalUsuario').modal('hide');
-        alert('Usuario guardado correctamente.');
+        toastr.success('Usuario guardado correctamente.');
         setTimeout(() => location.reload(), 800);
     })
     .catch(err => alert('Error de red: ' + err));
 }
 
 // ───────────── CONFIRMAR ELIMINAR ─────────────
-function confirmarEliminar(id, nombre) {
-    idEliminar = id;
-    document.getElementById('nombre-eliminar').textContent = nombre;
-    $('#modalEliminar').modal('show');
+const TOGGLE_BASE = "{{ url('/users') }}";
+
+function toggleEstado(id, estadoActual, nombre) {
+    const accion = estadoActual ? 'inactivar' : 'activar';
+
+    if (!confirm(`¿Estás seguro que deseas ${accion} a ${nombre}?`)) return;
+
+    fetch(`${BASE}/${id}/toggle-estado`, {
+        method: 'PATCH',
+        headers: {
+            'X-CSRF-TOKEN': CSRF,
+            'Accept': 'application/json',
+        },
+    })
+    .then(r => r.json())
+    .then(data => {
+        if (data.error) {
+            alert(data.error);  // ← cambiado
+            return;
+        }
+        alert(data.mensaje);    // ← cambiado
+        setTimeout(() => location.reload(), 800);
+    })
+    .catch(() => alert('Error de red. Intenta de nuevo.')); // ← cambiado
 }
 
 document.getElementById('btn-confirmar-eliminar').addEventListener('click', function () {

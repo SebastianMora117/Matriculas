@@ -53,7 +53,7 @@
                                 <label for="tipo_archivo"><i class="fas fa-tag mr-1"></i> Tipo de Documento <span class="text-danger">*</span></label>
                                 <select class="form-control @error('tipo_archivo') is-invalid @enderror" id="tipo_archivo" name="tipo_archivo" required>
                                     <option value="">-- Seleccione un tipo --</option>
-                                    <option value="tarjetaIdentidad" {{ old('tipo_archivo') == 'tarjetaIdentidad' ? 'selected' : '' }}>Tarjeta de Identidad</option>
+                                    <option value="tarjetaIdentidad" {{ old('tipo_archivo') == 'tarjetaIdentidad' ? 'selected' : '' }}>Documento de Identidad</option>
                                     <option value="RegistroCivil" {{ old('tipo_archivo') == 'RegistroCivil' ? 'selected' : '' }}>Registro Civil</option>
                                     <option value="CedulaAcudiente" {{ old('tipo_archivo') == 'CedulaAcudiente' ? 'selected' : '' }}>Cedula de ciudadania del acudiente</option>
                                     <option value="afiliacionEpsSisben" {{ old('tipo_archivo') == 'afiliacionEpsSisben' ? 'selected' : '' }}>Afiliación EPS o Sisben</option>
@@ -69,9 +69,9 @@
                                 @enderror
                             </div>
  
-                            {{-- Número Tarjeta de Identidad --}}
+                            {{-- Número Documento de Identidad --}}
                             <div class="form-group">
-                                <label for="tarjetaIdentidad"><i class="fas fa-id-card mr-1"></i> Número Tarjeta de Identidad <span class="text-danger">*</span></label>
+                                <label for="tarjetaIdentidad"><i class="fas fa-id-card mr-1"></i> Número Documento de Identidad <span class="text-danger">*</span></label>
                                 <input type="text"
                                        class="form-control @error('tarjetaIdentidad') is-invalid @enderror"
                                        id="tarjetaIdentidad"
@@ -132,7 +132,7 @@
                 <div class="row mb-3">
                     <div class="col-md-5">
                         <div class="input-group">
-                            <input type="text" id="filtrotarjetaIdentidad" class="form-control" placeholder="Buscar por número de tarjeta de identidad...">
+                            <input type="text" id="filtrotarjetaIdentidad" class="form-control" placeholder="Buscar por número de Documento de Identidad...">
                             <div class="input-group-append">
                                 <button class="btn btn-outline-primary" id="btnBuscar">
                                     <i class="fas fa-search"></i> Buscar
@@ -143,7 +143,7 @@
                     <div class="col-md-3">
                         <select class="form-control" id="filtroTipo">
                             <option value="">-- Todos los tipos --</option>
-                            <option value="tarjetaIdentidad">Tarjeta de identidad</option>
+                            <option value="tarjetaIdentidad">Documento de Identidad</option>
                             <option value="RegistroCivil">Registro civil</option>
                             <option value="CedulaAcudiente">Cedula de ciudadania del acudiente</option>
                             <option value="afiliacionEpsSisben">Afiliación EPS o Sisben</option>
@@ -169,7 +169,7 @@
                             <tr>
                                 <th>#</th>
                                 <th><i class="fas fa-tag mr-1"></i>Tipo</th>
-                                <th><i class="fas fa-id-card mr-1"></i>Tarjeta de identidad</th>
+                                <th><i class="fas fa-id-card mr-1"></i>Documento de Identidad</th>
                                 <th><i class="fas fa-file-pdf mr-1"></i>Archivo</th>
                                 <th><i class="fas fa-calendar mr-1"></i>Fecha</th>
                                 <th>Acciones</th>

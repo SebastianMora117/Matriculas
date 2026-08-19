@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rule;
 use App\Models\Rol;
+use Illuminate\Support\Facades\Auth;
 
 class GestionUsuariosController extends Controller
 {
@@ -29,10 +30,15 @@ class GestionUsuariosController extends Controller
     {
         try {
             $data = $request->validate([
-                'name'              => 'required|string|max:255',
-                'email'             => 'required|email|max:255|unique:users,email',
-                'password'          => 'required|string|min:8',
-                'roles'             => 'required|integer|exists:roles,id',
+                'name'     => 'required|string|max:255',
+                'email'    => 'required|email|max:255|unique:users,email',
+                'password' => [
+                    'required',
+                    'string',
+                    'min:8',
+                    'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/',
+                ],
+                'roles'    => 'required|integer|exists:roles,id',
             ]);
 
             $data['password'] = Hash::make($data['password']);
@@ -40,35 +46,64 @@ class GestionUsuariosController extends Controller
 
             return response()->json($user, 201);
 
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
         } catch (\Exception $e) {
-            return response()->json([
-                'error' => $e->getMessage()
-            ], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
     public function update(Request $request, User $user)
     {
-        $data = $request->validate([
-            'name'              => 'required|string|max:255',
-            'email'             => ['required','email','max:255', Rule::unique('users','email')->ignore($user->id)],
-            'password'          => 'nullable|string|min:8',
-            'roles' => 'required|integer|exists:roles,id',
-        ]);
+        try {
+            $data = $request->validate([
+                'name'     => 'required|string|max:255',
+                'email'    => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
+                'password' => [
+                    'nullable',
+                    'string',
+                    'min:8',
+                    'regex:/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[^A-Za-z0-9]).+$/',
+                ],
+                'roles'    => 'required|integer|exists:roles,id',
+            ]);
 
-        if (!empty($data['password'])) {
-            $data['password'] = Hash::make($data['password']);
-        } else {
-            unset($data['password']);
+            if (!empty($data['password'])) {
+                $data['password'] = Hash::make($data['password']);
+            } else {
+                unset($data['password']);
+            }
+
+            $user->update($data);
+            return response()->json($user);
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(['errors' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(['error' => $e->getMessage()], 500);
         }
-
-        $user->update($data);
-        return response()->json($user);
     }
 
     public function destroy(User $user)
     {
         $user->delete();
         return response()->json(['message' => 'Usuario eliminado.']);
+    }
+
+    public function toggleEstado(User $user)
+    {
+        if (Auth::id() === $user->id) {
+            return response()->json([
+                'error' => 'No puedes cambiar el estado de tu propia cuenta.'
+            ], 403);
+        }
+    
+        $user->estado = $user->estado ? 0 : 1;
+        $user->save();
+    
+        return response()->json([
+            'estado'  => $user->estado,
+            'mensaje' => $user->estado ? 'Usuario activado.' : 'Usuario inactivado.',
+        ]);
     }
 }
